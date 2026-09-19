@@ -1,23 +1,194 @@
-# agentPiExtsSkills
+# Agent PI Extensions & Skills
 
-> Agent PI Extensions and Skills Collections
+A collection of **extensions, skills, and tools for Agent PI**, focused on local-first automation, system integration, and agent-driven workflows.
 
-A curated collection of custom extensions, skills, and tools designed to enhance **Agent PI**'s capabilities, ranging from local media control to automated workflows.
+The goal of this project is simple:
+
+> **Give the agent tools, not just words.**
+
+Agent PI can use these components to interact with local applications, services, hardware, and other systems while keeping functionality modular and reusable.
 
 ---
 
-## 📁 Repository Structure
+## Overview
 
-```text
+This repository contains two main types of components:
+
+### Extensions
+
+Extensions add executable capabilities to Agent PI.
+
+They can expose tools to the agent, provide user-facing commands, and integrate with local software or services.
+
+Examples include:
+
+* Media control
+* Linux system management
+* Hardware interfaces
+* IoT control
+* Local services
+* External APIs
+
+### Skills
+
+Skills provide reusable agent knowledge and workflows.
+
+They can define:
+
+* Instructions
+* Specialized behavior
+* Tool usage
+* Automation workflows
+* Domain-specific knowledge
+* Integration procedures
+
+Extensions provide the **capability**.
+
+Skills teach the agent **how and when to use it**.
+
+---
+
+## Repository Structure
+
+```text id="dy2wmp"
 agentPiExtsSkills/
-├── extensions/       # Custom TypeScript/JavaScript extensions for Agent PI
-│   └── jukebox.ts   # Local media playback control using mpv IPC
-├── skills/           # Modular prompts, tool definitions, and skill wrappers
-├── docs/             # Guides, API references, and documentation
-└── package.json      # Dependencies and build configuration
-🎵 Featured Extensions1. Jukebox (extensions/jukebox.ts)A local music player extension that connects Agent PI to mpv via IPC sockets. It allows both natural language interactions via LLM tools and direct CLI control using Slash Commands.   FeaturesSupported Audio Formats: .flac, .mp3, .m4a, .wav, .ogg, .aac, .opus   Language Translation Handling: Instructs the LLM to convert non-English artist/song queries into English before searching.   Robust IPC Connection: Built-in socket retries and background mpv process management.   Slash Command Interface: Quick manual control with /juke.   PrerequisitesEnsure mpv is installed on your system:macOS:Bashbrew install mpv
-Ubuntu/Debian:Bashsudo apt install mpv
-Usage1. Slash Commands/juke list - List available audio files   /juke play Queen - Search and play songs matching "Queen"   /juke pause - Pause current playback   /juke resume - Resume playback   /juke stop - Stop playback   2. Natural Language (LLM Tool)"Play some Beatles songs from my local library.""Pause the music.""Find and play some FLAC tracks."🚀 Getting StartedInstallationClone this repository:Bashgit clone [https://github.com/YOUR_USERNAME/agentPiExtsSkills.git](https://github.com/YOUR_USERNAME/agentPiExtsSkills.git)
+├── extensions/        # Agent PI extensions
+├── skills/            # Agent skills
+├── docs/              # Documentation
+├── package.json
+└── README.md
+```
+
+---
+
+## Featured Extension
+
+### Jukebox
+
+The Jukebox extension provides local music playback and control through `mpv`.
+
+It supports both natural-language interaction and direct `/juke` commands.
+
+Examples:
+
+```text id="9o5oqp"
+Play some Beatles.
+```
+
+```text id="sp3w36"
+/juke play Queen
+```
+
+```text id="c0c20q"
+/juke pause
+```
+
+The extension communicates with `mpv` through IPC and allows Agent PI to search and control a local audio library.
+
+See the documentation for configuration and usage details.
+
+---
+
+## Quick Start
+
+Clone the repository:
+
+```bash id="wxrryw"
+git clone https://github.com/johntsaiainow/agentPiExtsSkills.git
 cd agentPiExtsSkills
-Install dependencies:Bashnpm install
-Registering Extensions with Agent PI:Import or load the desired extensions (e.g., extensions/jukebox.ts) into your Agent PI runtime instance.🛠️ DevelopmentTo add new extensions or skills to this repository:Place new extensions inside extensions/ or modular skills in skills/.Follow the standard Agent PI registration interface (pi.registerTool and pi.registerCommand).   Update this README.md with relevant usage details.📝 LicenseMIT
+```
+
+Install dependencies:
+
+```bash id="yjgxsd"
+npm install
+```
+
+Individual extensions and skills may have additional dependencies.
+
+See the corresponding documentation before installation.
+
+---
+
+## Documentation
+
+Detailed documentation lives under [`docs/`](docs/).
+
+Topics include:
+
+```text id="9d67fv"
+docs/
+├── extensions.md
+├── skills.md
+├── architecture.md
+└── development.md
+```
+
+Extension-specific and skill-specific documentation may also be provided alongside their implementations.
+
+---
+
+## Design Philosophy
+
+### Local First
+
+Prefer local applications, services, models, and hardware whenever practical.
+
+### Modular
+
+Extensions and skills should remain independent, composable, and reusable.
+
+### Agent Accessible
+
+System capabilities should be exposed in a way that an agent can reason about and invoke.
+
+### Human Accessible
+
+Important functionality should remain directly controllable by the user.
+
+### Terminal Friendly
+
+Agent automation should complement normal command-line workflows rather than hide them.
+
+---
+
+## Roadmap
+
+Future components may include:
+
+* Linux system administration
+* Local LLM integration
+* MCP integrations
+* RAG and local knowledge systems
+* Hardware and GPIO control
+* IoT automation
+* Network management
+* Additional media tools
+* Reusable agent workflows
+
+---
+
+## Contributing
+
+Contributions and experiments are welcome.
+
+New components should remain modular, document their dependencies, and include practical usage examples.
+
+See [`docs/development.md`](docs/development.md) for development guidelines.
+
+---
+
+## License
+
+MIT
+
+## Author
+
+**John Tsai**
+
+GitHub: `johntsaiainow`
+
+---
+
+> **Give the agent tools, not just words.**
+
