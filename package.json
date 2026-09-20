@@ -1,13 +1,9 @@
 {
   "name": "agent-pi-exts-skills",
   "version": "1.0.0",
-  "description": "Agent PI Extensions and Skills Collections",
+  "description": "Pi Agent Extensions: Local Jukebox and YOLO Headless Vision",
   "main": "extensions/jukebox.ts",
-  "scripts": {
-    "build": "tsc"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
-  }
+  "keywords": ["pi-agent", "pi-extension", "jukebox", "yolo", "vision"],
+  "author": "John Tsai",
+  "license": "MIT"
 }
