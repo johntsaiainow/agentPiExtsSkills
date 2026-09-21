@@ -4,7 +4,7 @@ A collection of **extensions, skills, and supporting tools for Agent PI**, focus
 
 > **Give the agent tools, not just words.**
 
-The project extends Agent PI beyond conversation by giving the agent access to local applications, media, cameras, hardware, and system services.
+The project extends Agent PI beyond conversation by giving the agent access to local applications, media, cameras, sensors, hardware, and system services.
 
 ---
 
@@ -20,7 +20,7 @@ The project combines two complementary concepts:
 
 Extensions provide executable capabilities.
 
-They allow Agent PI to interact with software, operating-system services, media, cameras, hardware, and external systems.
+They allow Agent PI to interact with software, operating-system services, media, cameras, sensors, hardware, and external systems.
 
 ### Skills
 
@@ -39,7 +39,7 @@ Skills     → What the agent KNOWS how to do
 
 ## Current Capabilities
 
-### 🎵 Local Jukebox
+### 1. Local Jukebox
 
 Local music playback and control using `mpv`.
 
@@ -66,7 +66,7 @@ or:
 
 ---
 
-### 👁️ Camera Vision
+### 2. Camera Vision
 
 Headless computer vision using **YOLOv8**.
 
@@ -100,33 +100,87 @@ This provides a foundation for agents that can observe and react to the physical
 
 ---
 
+### 3. Hardware Temperature Monitor
+
+Physical temperature sensing using a **Digispark (ATtiny85)** and **DS18B20** digital temperature sensor.
+
+The sensor module connects to the host through USB CDC virtual serial and provides real-time ambient temperature data to Agent PI.
+
+Agent PI can:
+
+* Read ambient temperature from physical hardware
+* Access the sensor through `/dev/ttyACM0`
+* Report temperature conversationally
+* Use temperature as environmental context for agent workflows
+
+The Digispark firmware uses non-blocking DigiCDC / V-USB polling to maintain USB communication while performing 1-Wire temperature conversions.
+
+The capability is exposed to Agent PI through:
+
+```text
+get_room_temperature
+```
+
+Example:
+
+```text
+What's the room temperature?
+```
+
+Conceptually:
+
+```text
+DS18B20
+   │
+   │ 1-Wire
+   ▼
+ATtiny85 / Digispark
+   │
+   │ USB CDC
+   ▼
+Linux Host
+   │
+   ▼
+get_room_temperature
+   │
+   ▼
+Agent PI
+```
+
+This extends Agent PI from **seeing** the physical environment to also **sensing** it.
+
+---
+
 ## Architecture
 
 ```text
-                       User
-                        │
-                        ▼
-                 ┌──────────────┐
-                 │   Agent PI   │
-                 └──────┬───────┘
-                        │
-             ┌──────────┴──────────┐
-             │                     │
-             ▼                     ▼
-        Extensions              Skills
-             │                     │
-     Executable Tools       Agent Behavior
-             │
-       ┌─────┴─────┐
-       │           │
-       ▼           ▼
-    Jukebox      Vision
-       │           │
-       ▼           ▼
-      mpv       YOLOv8
-       │           │
-       ▼           ▼
-    Speakers     Camera
+                         User
+                          │
+                          ▼
+                   ┌──────────────┐
+                   │   Agent PI   │
+                   └──────┬───────┘
+                          │
+               ┌──────────┴──────────┐
+               │                     │
+               ▼                     ▼
+          Extensions              Skills
+               │                     │
+        Executable Tools       Agent Behavior
+               │
+       ┌───────┼─────────┐
+       │       │         │
+       ▼       ▼         ▼
+    Jukebox  Vision  Temperature
+       │       │         │
+       ▼       ▼         ▼
+      mpv    YOLOv8    USB CDC
+       │       │         │
+       ▼       ▼         ▼
+   Speakers  Camera    ATtiny85
+                         │
+                         ▼
+                       DS18B20
 ```
 
 The architecture is intentionally modular.
@@ -159,13 +213,14 @@ git clone https://github.com/johntsaiainow/agentPiExtsSkills.git
 cd agentPiExtsSkills
 ```
 
-Individual extensions may require additional software or Python/Node.js dependencies.
+Individual extensions may require additional software, hardware, or Python/Node.js dependencies.
 
 For example:
 
 ```text
 Jukebox       → mpv
 Camera Vision → Python + YOLOv8
+Temperature   → Digispark + DS18B20 + USB CDC
 ```
 
 See the documentation for each extension before deployment.
@@ -176,32 +231,30 @@ See the documentation for each extension before deployment.
 
 `AGENTS.md` defines how Agent PI should use the capabilities provided by this repository.
 
-The current agent can work with capabilities such as:
+Current capabilities include functions such as:
 
 ```text
 jukebox_control
 camera_vision
+get_room_temperature
 ```
 
 This separation keeps implementation and agent behavior independent:
 
 ```text
-Extension
-   │
-   ├── implements capability
-   │
-   ▼
-Agent Tool
-   │
-   ├── exposed to Agent PI
-   │
-   ▼
-AGENTS.md / Skills
-   │
-   ├── describes when and how to use it
-   │
-   ▼
-Agent Behavior
+Hardware / Software
+        │
+        ▼
+     Extension
+        │
+        ▼
+    Agent Tool
+        │
+        ▼
+ AGENTS.md / Skills
+        │
+        ▼
+  Agent Behavior
 ```
 
 ---
@@ -210,11 +263,11 @@ Agent Behavior
 
 ### Local First
 
-Prefer local applications, models, services, and hardware whenever practical.
+Prefer local applications, models, services, sensors, and hardware whenever practical.
 
 ### Physical AI
 
-Agents should be able to observe and interact with the physical world, not only generate text.
+Agents should be able to observe, sense, and eventually interact with the physical world — not only generate text.
 
 ### Modular
 
@@ -222,7 +275,7 @@ Capabilities should remain independent, composable, and replaceable.
 
 ### Agent Accessible
 
-Useful system functions should be exposed as tools that an agent can reason about and invoke.
+Useful system and hardware functions should be exposed as tools that an agent can reason about and invoke.
 
 ### Human Accessible
 
@@ -242,6 +295,7 @@ Potential areas include:
 
 * Local media control
 * Computer vision
+* Environmental sensing
 * Linux system administration
 * Local LLM integration
 * MCP integration
@@ -250,7 +304,7 @@ Potential areas include:
 * IoT devices
 * Network management
 * Robotics
-* Sensor integration
+* Additional sensor integration
 * Home and lab automation
 * Embedded systems
 * Reusable agent workflows
@@ -277,7 +331,7 @@ Physical World
 
 The root README is intentionally kept as a high-level overview.
 
-Detailed documentation for extensions, skills, protocols, installation, configuration, and development should live under:
+Detailed documentation for extensions, skills, hardware interfaces, protocols, installation, configuration, and development should live under:
 
 ```text
 docs/
@@ -315,5 +369,5 @@ GitHub: `johntsaiainow`
 
 > **Give the agent tools, not just words.**
 >
-> Then give it eyes, ears, and a path into the physical world.
+> Then give it eyes, ears, sensors, and a path into the physical world.
 
